@@ -28,7 +28,7 @@ class CoreGroup:
         return comp
 
     def clear_bad_cores(self):
-        ''' 清楚当前cg中的bad_core, 并填充新造的核, core_num保持不变 '''
+        ''' 清除当前cg中的bad_core, 并填充新造的核, core_num保持不变 '''
         if not sum(self.bad_core):
             return None  # 没有 bad_cores
         filtered_cores = [x for x, flag in zip(self.cores, self.bad_core) if not flag]

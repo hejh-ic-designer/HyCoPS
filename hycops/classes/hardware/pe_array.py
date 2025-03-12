@@ -40,7 +40,7 @@ class PEA:
 
     def check_valid(self):
         assert len(self.unroll) == 6, f"pe array unroll input error: {self.unroll}" # unroll 必须是6个数
-        assert COMP_POWER_RG[0] <= self.compute_power <= COMP_POWER_RG[1], f"pe array unroll input error: {self.unroll_power}" # 总算力介于1K-16K
+        assert COMP_POWER_RG[0] <= self.compute_power <= COMP_POWER_RG[1], f"pe array unroll input error: {self.unroll_power}"
 
     def get_unroll(self):
         ''' 返回计算阵列的展开维度 '''

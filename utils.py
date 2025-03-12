@@ -5,7 +5,7 @@ from copy import deepcopy
 from typing import TYPE_CHECKING, Any
 import itertools
 import yaml
-
+import importlib
 
 def load_yaml(yaml_path):
     with open(yaml_path, 'r') as f:
@@ -24,3 +24,9 @@ def pickle_deepcopy(to_copy: Any) -> Any:
         return copy
     except:
         return deepcopy(to_copy)
+
+def parse_user_pop(user_pop_path):
+    global module
+    module = importlib.import_module(user_pop_path)
+    user_pop = module.user_pop
+    return user_pop

@@ -36,7 +36,7 @@ mainstage = MainStage(
     dump_filename_pattern = f"outputs/{experiment_id}/?",
     num_generations = 50,
     num_individuals = 500,
-    user_pop_path = f'hycops/inputs/HW/user_pop1.py',
+    user_pop_path = f'hycops.inputs.HW.user_pop1',
     prob_crossover = 0.3, # probablility to perform corssover, prob_crossover + prob_mutation <= 1.0
     prob_mutation  = 0.7  # probablility to perform mutation,  prob_crossover + prob_mutation <= 1.0
 

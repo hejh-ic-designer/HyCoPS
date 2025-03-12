@@ -33,7 +33,7 @@ class HyCostModelEvaluation:
         给定一个NNG, 一个strip大小(已体现在NN中), 一个cg架构, 评估输入特征图是此strip时, NNG部署在cg上的性能数据
         (stack已经划分, tile_size是全灵活的)
         """
-        self.check_valid(cg)    # 检查core group的合法性，如果确保遗传算子不会产生非法cg，可以注释掉这行
+        # self.check_valid(cg)    # 检查core group的合法性，如果确保遗传算子不会产生非法cg，可以注释掉这行
         self.nng = nng
         self.cg = cg
         self.stacks = self.split_nng_2_stack()
@@ -137,15 +137,13 @@ class HyCostModelEvaluation:
         stack_comp_la = computation_delay + data_loading_delay + data_offloading_delay
         stack_la = max(stack_comp_la, ppb_transfer_delay)
         stack_en = memory_energy + computation_energy
-        
-        ## debug
+
+        #### for debug
         # if stack_la == ppb_transfer_delay:
-        #     logger.warning(f'stack_la = max(stack_comp_la, ppb_transfer_delay) is choosing ppb_transfer_delay = {ppb_transfer_delay}')
+        #     logger.warning(f'stack_la: stack_comp_la={stack_comp_la}; ppb_transfer_delay = {ppb_transfer_delay}')
 
         return (stack_la, stack_en, (computation_delay, data_loading_delay, data_offloading_delay, ppb_transfer_delay, memory_energy, computation_energy))
-        # 直接输出每个stack的latency 和 energy:
-        # return stack_la, stack_en
-        
+
 
     @staticmethod
     def evaluation_one_stack_computaiton(stack: Stack, cg: CoreGroup):

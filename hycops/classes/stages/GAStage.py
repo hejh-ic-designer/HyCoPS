@@ -3,6 +3,7 @@ from hycops.classes.stages.Stage import Stage
 from hycops.classes.workload.nn import NN
 from hycops.classes.ga.fitness_evaluator import StandardFitnessEvaluator
 from hycops.classes.ga.genetic_algorithm import GeneticAlgorithm
+from utils import parse_user_pop
 import importlib
 import logging
 logger = logging.getLogger(__name__)
@@ -18,7 +19,7 @@ class GAStage(Stage):
         self.fitness_evaluator = StandardFitnessEvaluator(nng=nng)
         self.num_generations = num_generations
         self.num_individuals = num_individuals
-        self.user_pop = self.parse_user_pop(user_pop_path)
+        self.user_pop = parse_user_pop(user_pop_path)
         self.prob_crossover = prob_crossover,
         self.prob_mutation  = prob_mutation
 
@@ -34,13 +35,6 @@ class GAStage(Stage):
             )
         pop, hof, stats = self.genetic_algorithm.run()
         yield hof, (pop, stats)
-
-
-    def parse_user_pop(self, user_pop_path):
-        global module
-        module = importlib.import_module(user_pop_path)
-        user_pop = module.user_pop
-        return user_pop
 
 
     def is_leaf(self) -> bool:

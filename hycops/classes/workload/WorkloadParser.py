@@ -1,6 +1,7 @@
 from utils import load_yaml
 from hycops.classes.workload.nn import NN
-
+import logging
+logger = logging.getLogger(__name__)
 
 
 class WorkloadParser:
@@ -30,6 +31,7 @@ class WorkloadParser:
         return all_nng
 
     def get_workloads(self):
+        logger.info(f'stack num for all nngs: {[[nn.stacks_num for nn in nng] for nng in self.all_nng]}')
         return self.all_nng
 
     def get_nng_num(self):
@@ -37,7 +39,7 @@ class WorkloadParser:
 
 
 if __name__ == '__main__': 
-    example = 'hycops/inputs/WL/example_1.yml'
+    example = 'hycops/inputs/WL/ai_isp_1.yml'
     wl_p = WorkloadParser(yaml_path=example, fixed_stack=True, h_w=(1920, 64))
     
     # get wl
