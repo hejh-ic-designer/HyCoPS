@@ -1,0 +1,13 @@
+# hybrid Cross-Pipeline Workload Structure
+# null for isp
+#! Restriction: The feature map size of all network layers is equal, only support stride=1
+
+1 : null  
+
+2 : hycops/inputs/WL/base_workload/sesr.yml
+
+3 : null
+
+4 : hycops/inputs/WL/base_workload/srgan.yml
+
+

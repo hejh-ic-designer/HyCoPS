@@ -1,0 +1,189 @@
+{
+    "root": {
+        "data": {
+            "id": "d6xc5f9bimg0",
+            "created": 1736404857514,
+            "text": "CoreGroup",
+            "expandState": "expand"
+        },
+        "children": [
+            {
+                "data": {
+                    "id": "d6xc5r7v8mo0",
+                    "created": 1736404883548,
+                    "text": "core_num",
+                    "layout": null,
+                    "expandState": "expand"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "d6y2knvtyeo0",
+                            "created": 1736479400610,
+                            "text": "[1, 16]",
+                            "expandState": "expand"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "d6xc5vdj3140",
+                    "created": 1736404892597,
+                    "text": "ppb1",
+                    "layout": null,
+                    "expandState": "expand"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "d6xc7nnr6tk0",
+                            "created": 1736405032530,
+                            "text": "size",
+                            "layout": null,
+                            "expandState": "expand"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "d6y2l2x4wv40",
+                                    "created": 1736479433341,
+                                    "text": "[0, 13]",
+                                    "expandState": "expand"
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "d6xc7piddu80",
+                            "created": 1736405036558,
+                            "text": "bw",
+                            "layout": null,
+                            "expandState": "expand"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "d6y2l8k9siw0",
+                                    "created": 1736479445623,
+                                    "text": "[6, 13]",
+                                    "expandState": "expand"
+                                },
+                                "children": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "d6xc62qxswg0",
+                    "created": 1736404908646,
+                    "text": "ppb2",
+                    "layout": null,
+                    "expandState": "expand"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "d6y2m3zsgsg0",
+                            "created": 1736479514042,
+                            "text": "== ppb1",
+                            "expandState": "expand"
+                        },
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "d6xc644jxe00",
+                    "created": 1736404911646,
+                    "text": "List[Core]",
+                    "layout": null,
+                    "expandState": "expand"
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "d6xc662rnqg0",
+                            "created": 1736404915891,
+                            "text": "Core",
+                            "layout": null,
+                            "expandState": "expand"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "d6xc6pfcbww0",
+                                    "created": 1736404958011,
+                                    "text": "act_buf",
+                                    "layout": null,
+                                    "expandState": "expand"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "d6xc6tgjxfs0",
+                                    "created": 1736404966791,
+                                    "text": "wt_buf",
+                                    "layout": null,
+                                    "expandState": "expand"
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "d6xc6uj7gls0",
+                                    "created": 1736404969128,
+                                    "text": "pe_array",
+                                    "layout": null,
+                                    "expandState": "expand"
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "d6xc6wjb3ko0",
+                                            "created": 1736404973488,
+                                            "text": "unroll",
+                                            "layout": null,
+                                            "expandState": "expand"
+                                        },
+                                        "children": [
+                                            {
+                                                "data": {
+                                                    "id": "d6y2lnw3oxs0",
+                                                    "created": 1736479478990,
+                                                    "text": "six numers in [0, 10]",
+                                                    "expandState": "expand"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "data": {
+                                                            "id": "d6y2mfe2z5k0",
+                                                            "created": 1736479538851,
+                                                            "text": "sum in [10, 14]",
+                                                            "expandState": "expand"
+                                                        },
+                                                        "children": []
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "template": "right",
+    "theme": "fresh-blue-compat",
+    "version": "1.4.43"
+}
