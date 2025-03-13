@@ -4,7 +4,6 @@ from hycops.classes.workload.nn import NN
 from hycops.classes.ga.fitness_evaluator import StandardFitnessEvaluator
 from hycops.classes.ga.genetic_algorithm import GeneticAlgorithm
 from utils import parse_user_pop
-import importlib
 import logging
 logger = logging.getLogger(__name__)
 

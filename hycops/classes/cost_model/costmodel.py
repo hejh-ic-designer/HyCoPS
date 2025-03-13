@@ -33,7 +33,7 @@ class HyCostModelEvaluation:
         给定一个NNG, 一个strip大小(已体现在NN中), 一个cg架构, 评估输入特征图是此strip时, NNG部署在cg上的性能数据
         (stack已经划分, tile_size是全灵活的)
         """
-        # self.check_valid(cg)    # 检查core group的合法性，如果确保遗传算子不会产生非法cg，可以注释掉这行
+        # self.check_valid(cg)    # 检查core group的合法性，如果确保遗传算子不会产生非法cg，可以注释掉这行，如果修改了遗传算子，建议打开
         self.nng = nng
         self.cg = cg
         self.stacks = self.split_nng_2_stack()
@@ -150,8 +150,8 @@ class HyCostModelEvaluation:
         ''' evaluation delay for a core group on a stack '''
         tile_area_delay_energy_for_cores = [HyCostModelEvaluation.evaluation_one_core(stack, c) for c in cg.cores]
         area_of_strip = stack.get_ifm_area()
-        a_pre_d_sum = sum([a/d for (a, d, _) in tile_area_delay_energy_for_cores])
-        num_factor = [ceil(area_of_strip / a_pre_d_sum / d) for (_, d, _) in tile_area_delay_energy_for_cores]
+        a_div_d_sum = sum([a/d for (a, d, _) in tile_area_delay_energy_for_cores])
+        num_factor = [ceil(area_of_strip / a_div_d_sum / d) for (_, d, _) in tile_area_delay_energy_for_cores]
         HyCostModelEvaluation.set_bad_core_flag(cg, num_factor)
         computation_delay_each_core = [f * d for f, (_, d, _) in zip(num_factor, tile_area_delay_energy_for_cores)]
         # print('computation_delay_each_core:', computation_delay_each_core)  # for debug

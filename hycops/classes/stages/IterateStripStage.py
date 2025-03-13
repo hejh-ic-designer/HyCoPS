@@ -37,7 +37,8 @@ class IterateStripStage(Stage):
     def get_strip_lst_2(resolution: tuple[int]):
         ''' 根据给定的分辨率输出迭代列表 '''
         h = resolution[1]
-        divide_lst = [1, 2, 3, 4, 5, 8, 15, 30]
+        divide_lst = [1, 2, 8, 30]
+        # divide_lst = [1, 2, 3, 4, 5, 8, 15, 30]
         return [ceil(h / denominator) for denominator in divide_lst]
 
 

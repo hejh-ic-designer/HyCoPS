@@ -34,8 +34,8 @@ mainstage = MainStage(
     resolution = args.resolution,                         # ai-isp流水线处理图片的分辨率(W, H)
     strip_h_range = (60, args.resolution[1]/2, 120),      # 详见IterateStripStage，一个strip的高度的范围, (start, end, step)
     dump_filename_pattern = f"outputs/{experiment_id}/?",
-    num_generations = 50,
-    num_individuals = 500,
+    num_generations = 20,
+    num_individuals = 5000,
     user_pop_path = f'hycops.inputs.HW.user_pop1',
     prob_crossover = 0.3, # probablility to perform corssover, prob_crossover + prob_mutation <= 1.0
     prob_mutation  = 0.7  # probablility to perform mutation,  prob_crossover + prob_mutation <= 1.0

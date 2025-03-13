@@ -12,6 +12,8 @@ class CoreGroup_indi(CoreGroup):
     def __init__(self, core_num, ppb, cores):
         super().__init__(core_num, ppb, cores)
         self.fitness = creator.FitnessMulti()
+        self.energy = float()
+        self.buffer = int()
 
 
 class GeneticAlgorithm:
@@ -21,12 +23,13 @@ class GeneticAlgorithm:
         num_individuals,
         user_pop=[],
         prob_crossover=0.3,
-        prob_mutation=0.7
+        prob_mutation=0.7,
+        lambda_div_mu = 10
     ) -> None:
         self.fitness_evaluator = fitness_evaluator  # class to evaluate fitness of each indiviual
         self.num_generations = num_generations  # number of generations
         self.num_individuals = num_individuals  # number of individuals in initial generation
-        self.para_mu = int(num_individuals / 10)  # number of indiviuals taken from previous generation
+        self.para_mu = int(num_individuals / lambda_div_mu)  # number of indiviuals taken from previous generation
         self.para_lambda = num_individuals  # number of indiviuals in generation
         self.user_pop = user_pop
         self.prob_crossover = prob_crossover  # probablility to perform corssover, prob_crossover + prob_mutation <= 1.0
@@ -152,7 +155,7 @@ class GeneticAlgorithm:
             indi.cores = [CoreGroup.create_core() for _ in range(indi.core_num)]
         else:
             # 有(1-indpd)的概率，改变核的数量
-            if random.random() < 0.6:
+            if random.random() < 0.5:       # 经验值，设置为0.6时，适当增加采样到多核架构的概率
                 # 增加核的数量
                 new_core_num = random.randint(indi.core_num, CORE_NUM_RG[1])
                 indi.cores += [CoreGroup.create_core() for _ in range(new_core_num-indi.core_num)]
@@ -181,8 +184,8 @@ class GeneticAlgorithm:
 if __name__ == '__main__':
     import numpy as np
     from hycops.classes.workload.WorkloadParser import WorkloadParser
-    import matplotlib.pyplot as plt
     from utils import parse_user_pop
+    from hycops.visualization.plot_pareto import plot_one_pareto, plot_two_pareto
 
     # user pop cg dut
     user_pop = parse_user_pop(user_pop_path=f'hycops.inputs.HW.user_pop1')
@@ -214,30 +217,6 @@ if __name__ == '__main__':
         front2 = np.array([ind.fitness.values for ind in hof2])
         return front2
 
-    def plot_two_pareto(front1, front2):
-        # 可视化帕累托前沿
-        plt.scatter(front1[:, 0], front1[:, 1], c="b", label='sesr' , alpha=0.6, marker='o')
-        plt.scatter(front2[:, 0], front2[:, 1], c="r", label='srgan', alpha=0.6, marker='o')
-        plt.xscale('log')   # 对数坐标
-        plt.yscale('log')   # 对数坐标
-        plt.xlabel("Computing Power")
-        plt.ylabel("Latency")
-        plt.title("Pareto Front")
-        plt.legend()
-        plt.grid(True, which='both', linestyle='--', linewidth=0.5)
-        plt.show()
-
-    def plot_one_pareto(front):
-        # 可视化帕累托前沿
-        plt.scatter(front[:, 0], front[:, 1], c="b", label='nn' , alpha=0.6, marker='o')
-        plt.xscale('log')   # 对数坐标
-        plt.yscale('log')   # 对数坐标
-        plt.xlabel("Computing Power")
-        plt.ylabel("Latency")
-        plt.title("Pareto Front")
-        plt.legend()
-        plt.grid(True, which='both', linestyle='--', linewidth=0.5)
-        plt.show()
 
     # start
     sesr_front = sesr_ga()

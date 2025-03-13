@@ -11,7 +11,8 @@ class CoreGroup:
         self.cores = cores
         self.ppb = ppb      # single ping-pang buffer, two ppb is totally same
         self.bad_core = [False for _ in range(core_num)]  # 某个core被标记为bad core时，在变异和交叉时将其删除并重组
-    
+
+
     def check_valid(self):
         assert self.core_num == len(self.cores), f"core_num input error, {self.core_num} not equal {len(self.cores)}"
         assert CORE_NUM_RG[0] <= self.core_num <= CORE_NUM_RG[1], f"core_num input error: {self.core_num}"
@@ -21,11 +22,13 @@ class CoreGroup:
         for c in self.cores:
             c.check_valid()
 
+
     def get_cg_compute(self):
         ''' 所有核算力相加 '''
         each_core_comp = [c.get_compute() for c in self.cores]
         comp = sum(each_core_comp)
         return comp
+
 
     def clear_bad_cores(self):
         ''' 清除当前cg中的bad_core, 并填充新造的核, core_num保持不变 '''
