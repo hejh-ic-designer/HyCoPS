@@ -3,20 +3,20 @@ from hycops.classes.hardware.range_parameter import *
 
 
 class Buffer:
-    def __init__(self, size_power: int, bw_power: int):
+    def __init__(self, size: int, bw_power: int):
         """
         Buffer的大小和带宽都是2的倍数, 所以入参是2的幂指数
 
         Args:
-            size_power (int): range in [0, 13] means [1KB, 8MB], unit: KB
-            bw_power (int): range in [6, 13] means [64, 8192], unit: bits/cycle
+            size (int): unit: KB
+            bw_power (int): unit: bits/cycle
         """
-        self.size_power = size_power    # actual size: 2^size_power KB
+        self.size = size                # unit: KB
         self.bw_power = bw_power        # actual bw: 2^bw_power bits/cycle
 
     def get_buf_size(self):
-        '''  2^size_power KB '''
-        return 2**self.size_power
+        ''' unit: KB '''
+        return self.size
     
     def get_buf_bw(self):
         ''' 2^bw_power bits/cycle '''
@@ -24,7 +24,7 @@ class Buffer:
     
     def get_read_cost(self):
         return self._estimate_port_cost(size=self.get_buf_size(), bw=(self.get_buf_bw()/8))
-        
+
     @staticmethod
     def _estimate_port_cost(size: int, bw: int, is_read: bool = True) -> float:
         """根据buffer 的size 和bandwidth, 估计read 或write 一次的energy
@@ -52,7 +52,7 @@ class Buffer:
             return read_cost * 1.2
 
     def __str__(self) -> str:
-        return f"Buffer(size={self.size},bw={self.bw})"
+        return f"Buffer(size={self.size},bw={self.get_buf_bw()})"
     
     def __repr__(self) -> str:
         return str(self)

@@ -10,8 +10,8 @@ class Core:
 
     def check_valid(self):
         self.pe_array.check_valid()
-        assert LB_SIZE_POWER_RG[0] <= self.act_buf.size_power <= LB_SIZE_POWER_RG[1], f"buffer size range error: {self.act_buf.size_power} out of {LB_SIZE_POWER_RG}"
-        assert LB_SIZE_POWER_RG[0] <= self.wt_buf.size_power <= LB_SIZE_POWER_RG[1], f"buffer size range error: {self.wt_buf.size_power} out of {LB_SIZE_POWER_RG}"
+        assert LB_SIZE_RG[0] <= self.act_buf.size <= LB_SIZE_RG[1], f"buffer size range error: {self.act_buf.size} out of {LB_SIZE_RG}"
+        assert LB_SIZE_RG[0] <= self.wt_buf.size <= LB_SIZE_RG[1], f"buffer size range error: {self.wt_buf.size} out of {LB_SIZE_RG}"
 
     def get_unroll(self):
         return self.pe_array.get_unroll()

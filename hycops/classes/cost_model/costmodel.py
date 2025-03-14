@@ -8,6 +8,7 @@ from math import ceil
 import logging
 logger = logging.getLogger(__name__)
 
+E_MAC = 0.1     # J / mac
 class HyCostModelEvaluation:
     """
     启发式方法给出一个tile划分策略(也称core allocation)
@@ -185,7 +186,7 @@ class HyCostModelEvaluation:
         ''' evaluation fusion only one tile's energy for a core on a stack'''
         one_tile_macs = sum([unroll['h'] * unroll['w'] * ceil(unit_tile_factor) * ic * oc * k * k 
                              for ic, oc, k, in zip(stack.ich_per_layer, stack.och_per_layer, stack.kernel_size)])
-        core_fusion_one_tile_energy = one_tile_macs * 1.0   # E_mac = 1.0 J/mac
+        core_fusion_one_tile_energy = one_tile_macs * E_MAC
         
         return core_fusion_one_tile_area, core_fusion_one_tile_delay, core_fusion_one_tile_energy
     

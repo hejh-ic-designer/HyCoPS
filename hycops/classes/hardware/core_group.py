@@ -16,7 +16,7 @@ class CoreGroup:
     def check_valid(self):
         assert self.core_num == len(self.cores), f"core_num input error, {self.core_num} not equal {len(self.cores)}"
         assert CORE_NUM_RG[0] <= self.core_num <= CORE_NUM_RG[1], f"core_num input error: {self.core_num}"
-        assert GB_SIZE_POWER_RG[0] <= self.ppb.size_power <= GB_SIZE_POWER_RG[1], f"buffer size range error: {self.ppb.size_power} out of {GB_SIZE_POWER_RG}"
+        assert GB_SIZE_RG[0] <= self.ppb.size <= GB_SIZE_RG[1], f"buffer size range error: {self.ppb.size} out of {GB_SIZE_RG}"
         assert BW_POWER_RG[0] <= self.ppb.bw_power <= BW_POWER_RG[1], f"buffer bw range error: {self.ppb.bw_power} out of {BW_POWER_RG}"
         
         for c in self.cores:
@@ -43,13 +43,13 @@ class CoreGroup:
     @staticmethod
     def create_core():
         return Core(
-            act_buf=Buffer(size_power=random.randint(*LB_SIZE_POWER_RG), bw_power=random.randint(*BW_POWER_RG)),
-            wt_buf=Buffer(size_power=random.randint(*LB_SIZE_POWER_RG), bw_power=random.randint(*BW_POWER_RG)),
+            act_buf=Buffer(size=random.randint(*LB_SIZE_RG), bw_power=random.randint(*BW_POWER_RG)),
+            wt_buf=Buffer(size=random.randint(*LB_SIZE_RG), bw_power=random.randint(*BW_POWER_RG)),
             pe_array=PEA(unroll_power=create_random_PEA())
         )
 
     def __str__(self):
-        return f"CoreGroup(core_num={self.core_num})"
+        return f"CoreGroup(core_num={self.core_num},total_compute={self.get_cg_compute()},ppb={self.ppb},cores={self.cores})"
     
     def __repr__(self):
         return str(self)

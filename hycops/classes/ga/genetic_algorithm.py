@@ -79,13 +79,8 @@ class GeneticAlgorithm:
         stats.register("std (" + ", ".join(self.fitness_evaluator.metrics) + ")", self.statistics_evaluator.get_std,)
         stats.register("min (" + ", ".join(self.fitness_evaluator.metrics) + ")", self.statistics_evaluator.get_min,)
         stats.register("max (" + ", ".join(self.fitness_evaluator.metrics) + ")", self.statistics_evaluator.get_max,)
+        stats.register("_dummy", lambda _: (self.statistics_evaluator.append_generation(self.pop), 0)[1])   # 新增虚拟统计项：触发保存种群并返回占位值0，为了画出种群进化图
 
-        # 新增虚拟统计项：触发保存种群并返回0
-        stats.register("_dummy", lambda _: (
-            self.statistics_evaluator.append_generation(self.pop), 
-            0  # 返回一个占位值
-        )[1])
-    
         # 执行(mu+lambda)进化算法
         algorithms.eaMuPlusLambda(
             population=self.pop,
@@ -107,7 +102,7 @@ class GeneticAlgorithm:
         core_lst = [CoreGroup.create_core() for _ in range(random.randint(*CORE_NUM_RG))]
         return creator.Individual(
             core_num=len(core_lst),
-            ppb=Buffer(size_power=random.randint(*GB_SIZE_POWER_RG), bw_power=random.randint(*BW_POWER_RG)),
+            ppb=Buffer(size=random.randint(*GB_SIZE_RG), bw_power=random.randint(*BW_POWER_RG)),
             cores=core_lst
             )
     
@@ -141,7 +136,7 @@ class GeneticAlgorithm:
 
         return indi1, indi2
 
-    def mutate(self, indi: CoreGroup_indi, indpd=0.5):
+    def mutate(self, indi: CoreGroup_indi, indpd=0.6):
         """
         定义CoreGroup个体的变异行为:
         1. 有indpd的概率, core_num将会变异
@@ -170,7 +165,7 @@ class GeneticAlgorithm:
 
         # ping-pang buffer 变异, 和上面的变异是互相独立的
         if random.random() < indpd:
-            indi.ppb = Buffer(size_power=random.randint(*GB_SIZE_POWER_RG), bw_power=random.randint(*BW_POWER_RG))
+            indi.ppb = Buffer(size=random.randint(*GB_SIZE_RG), bw_power=random.randint(*BW_POWER_RG))
 
         return (indi,)
 
