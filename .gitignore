@@ -82,4 +82,4 @@ pip-delete-this-directory.txt
 # user file
 outputs/
 outputs*/
-
+*.ipynb
