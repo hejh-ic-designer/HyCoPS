@@ -6,7 +6,7 @@
 
 3. Use a terminal or an Anaconda Prompt for the following steps:
 
-   -  `cd` to RESIDUAL-DSE repo
+   -  `cd` to HYCOPS repo
    -  create environment form `environment.yml`
        ```
        conda env create -f environment.yml
