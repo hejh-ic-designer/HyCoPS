@@ -4,19 +4,7 @@
 
 2. clone整个目录文件 (`git clone` this repo)
 
-3. Use a terminal or an Anaconda Prompt for the following steps:
-
-   -  `cd` to HYCOPS repo
-   -  create environment form `environment.yml`
-       ```
-       conda env create -f environment.yml
-       ```
-   -  activate new enviroment:
-       ```
-       conda activate RESIenv
-       ```
-
-4. 设置包路径: (出现类似“ModuleNotFoundError: No module named 'hycops'”的错误时, 请使用)
+3. 设置包路径: (出现类似“ModuleNotFoundError: No module named 'hycops'”的错误时, 请使用)
    - 使用`cd` 转到顶层目录
    - 设置包路径，将当前工作目录加入到PYTHONPATH环境变量中, linux/macOS 下使用
     ```bash
