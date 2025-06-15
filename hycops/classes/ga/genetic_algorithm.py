@@ -18,7 +18,7 @@ class CoreGroup_indi(CoreGroup):
 
 class GeneticAlgorithm:
     def __init__(self, 
-        fitness_evaluator, 
+        fitness_evaluator: StandardFitnessEvaluator, 
         num_generations, 
         num_individuals,
         user_pop=[],
@@ -26,7 +26,7 @@ class GeneticAlgorithm:
         prob_mutation=0.7,
         lambda_div_mu = 10
     ) -> None:
-        self.fitness_evaluator = fitness_evaluator  # class to evaluate fitness of each indiviual
+        self.fitness_evaluator = fitness_evaluator  # class to evaluate fitness of each indiviual StandardFitnessEvaluator(nng=nng_dndm)
         self.num_generations = num_generations  # number of generations
         self.num_individuals = num_individuals  # number of individuals in initial generation
         self.para_mu = int(num_individuals / lambda_div_mu)  # number of indiviuals taken from previous generation
@@ -63,10 +63,10 @@ class GeneticAlgorithm:
         self.pop = self.toolbox.population(n=self.num_individuals)  # pop is current population
 
 
-        # replace sub part of initial generation with user provided individuals
+        # 如果用户提供了初始种群，则将其转换为个体并添加到种群中，但是不能超过25%
         for indv_index in range(len(self.user_pop)):
-            self.pop[indv_index] = self._convert_to_indi(self.user_pop[indv_index])
-
+            self.pop[indv_index] = self._convert_to_indi(self.user_pop[indv_index]) #一开始用户提供的都是core group对象，转换为coregroup_indi对象，就多了一个fitness函数
+            
             # don't bias initial population too much, when it comes to 25%, break
             if indv_index >= self.num_individuals / 4:
                 break
@@ -75,7 +75,7 @@ class GeneticAlgorithm:
     def run(self):
         # 定义统计函数
         stats = tools.Statistics(lambda ind: ind.fitness.values)
-        stats.register("avg (" + ", ".join(self.fitness_evaluator.metrics) + ")", self.statistics_evaluator.get_avg,)
+        stats.register("avg (" + ", ".join(self.fitness_evaluator.metrics) + ")", self.statistics_evaluator.get_avg,) # 相当于avg(computation, latency])
         stats.register("std (" + ", ".join(self.fitness_evaluator.metrics) + ")", self.statistics_evaluator.get_std,)
         stats.register("min (" + ", ".join(self.fitness_evaluator.metrics) + ")", self.statistics_evaluator.get_min,)
         stats.register("max (" + ", ".join(self.fitness_evaluator.metrics) + ")", self.statistics_evaluator.get_max,)
@@ -100,7 +100,7 @@ class GeneticAlgorithm:
     
     def create_individual(self):
         core_lst = [CoreGroup.create_core() for _ in range(random.randint(*CORE_NUM_RG))]
-        return creator.Individual(
+        return creator.Individual(   # 创建一个CoreGroup_indi个体, Individual是CoreGroup_indi的子类
             core_num=len(core_lst),
             ppb=Buffer(size=random.randint(*GB_SIZE_RG), bw_power=random.randint(*BW_POWER_RG)),
             cores=core_lst

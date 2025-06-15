@@ -14,17 +14,18 @@ class WorkloadParser:
         self.all_nng = self.parse_workload(yaml_path, fixed_stack, h_w)
         
     def parse_workload(self, yaml_path, fixed_stack, h_w):
-        wl_origin: dict = load_yaml(yaml_path)
-        vls = [i for i in wl_origin.values()] + [None]
+        wl_origin: dict = load_yaml(yaml_path) # ai_isp数据流读入，1:None 2:hycops/inputs/WL/base_workload/dndm.yml 3:None
+        vls = [i for i in wl_origin.values()] + [None]# 在最后加一个None，转换为list
 
         # parse nng list
         all_nng = []
         cur_nng = []
         prev_vl = None
-        for vl in vls:      # vl is None or network yaml path
+        for vl in vls:      # vl要么是None，要么是nn的yml路径 
             if vl != None:
                 cur_nng.append(NN(vl, fixed_stack, h_w))
             elif vl == None and prev_vl != None:
+                # 只有把两个None之间的所有NN都解析完了，才会把当前的nng添加到all_nng中
                 all_nng.append(cur_nng)
                 cur_nng=[]
             prev_vl = vl

@@ -1,5 +1,13 @@
 from hycops.classes.hardware.core_group import *
-
+'''
+    Buffer:大小单位是KB, 带宽都是2的倍数, 所以入参是2的幂指数
+        Args:
+            size (int): unit: KB
+            bw_power (int): unit: bits/cycle
+    PEA: 处理单元数组, unroll_power是一个list, 每个元素代表对应的unroll factor
+        example: [5, 4, 3, 1, 0, 0], means spatial unroll of [h, w, oc, ic, fx, fy] is [32, 16, 8, 2, 1, 1]
+            其中每个数的 range in [0, 10]，乘法器总数的限制在宏定义里，要在1k到8k之间，也就是几个参数sum要在10和12之间
+'''
 # customize your cores
 c1  = Core(act_buf=Buffer(10,  8), wt_buf=Buffer(10,  7), pe_array=PEA(unroll_power=[3, 4, 4, 2, 0, 0])) 
 c2  = Core(act_buf=Buffer(20,  8), wt_buf=Buffer(120, 7), pe_array=PEA(unroll_power=[5, 2, 1, 2, 0, 0])) 

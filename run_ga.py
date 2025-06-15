@@ -6,17 +6,17 @@ from hycops.classes.ga.genetic_algorithm import GeneticAlgorithm, CoreGroup_indi
 from hycops.classes.ga.fitness_evaluator import StandardFitnessEvaluator
 
 # experiment parameter
-resolution = (1920, 1080)
-strip_size = (resolution[0], 72)
-num_gen = 20
-num_pop = 10000
-pbcx = 0.3
-pbmt = 0.7
-l_div_m = 10
+resolution = (1920, 1080) # 图像分辨率
+strip_size = (resolution[0], 72) # strip大小，这里就是1920*72
+num_gen = 20 # 进化代数
+num_pop = 10000 # 种群数量
+pbcx = 0.3 # 交叉概率
+pbmt = 0.7 # 变异概率
+l_div_m = 10 # lambda/miu, λ/μ,意思是父辈/变异的个数 
 
 # workload, user pop cg dut
-wl_p = WorkloadParser(yaml_path='hycops/inputs/WL/ai_isp_1.yml', fixed_stack=True, h_w=strip_size)     # strip size is h_w
-user_pop = parse_user_pop(user_pop_path=f'hycops.inputs.HW.user_pop1')
+wl_p = WorkloadParser(yaml_path='hycops/inputs/WL/ai_isp_1.yml', fixed_stack=True, h_w=strip_size)     #固定的stack划分, stack的定义是几个连续卷机层的集合 
+user_pop = parse_user_pop(user_pop_path=f'hycops.inputs.HW.user_pop1') #这是在解析用户提供的population, 也就是hycops/inputs/HW/user_pop1.py文件
 
 
 def run_dndm_ga():
@@ -24,13 +24,13 @@ def run_dndm_ga():
     print('running GA of dndm...')
     nng_dndm  = wl_p.get_workloads()[0]   # dndm
     my_ga1 = GeneticAlgorithm(
-        fitness_evaluator=StandardFitnessEvaluator(nng=nng_dndm), 
-        num_generations=num_gen, 
-        num_individuals=num_pop, 
-        user_pop=user_pop,
-        prob_crossover=pbcx,
-        prob_mutation=pbmt,
-        lambda_div_mu=l_div_m
+        fitness_evaluator=StandardFitnessEvaluator(nng=nng_dndm),# 自定义fitness评估函数 
+        num_generations=num_gen,    #默认20代 
+        num_individuals=num_pop,    #默认种群10000个
+        user_pop=user_pop,          #用户自定义的几个core group
+        prob_crossover=pbcx,        #crossover概率 0.3
+        prob_mutation=pbmt,         # mutation概率 0.7
+        lambda_div_mu=l_div_m       # λ/μ, 这里是10
         )
     pop1, hof1, stats1 = my_ga1.run()
     my_ga1.plot_evolution()        # 这里画出每一代的population进化图
@@ -60,6 +60,15 @@ if __name__ == '__main__':
     FRQ = 100      # MHz
     BW_SYS = 90    # bit/cc, (1000MB/s @100MHz)  80bit/cc * 100MHz = 1000 MB/s
     isp_latency = strip_size[0]*strip_size[1]
+    '''
+    BW_SYS / 8 代表单位转换为1B
+    3*N_ISP 代表每个ISP占用RGB 3B的带宽，一共N_ISP个ISP
+    (BW_SYS / 8 - 3*N_ISP) 代表剩余的带宽
+    N_NNG 代表每个strip需要经过N_NNG个NNG处理器的处理,这里假设每个NN group平分带宽
+    strip_size[0]*strip_size[1]*3 代表每个strip的像素点数*3B(RGB) = 每个strip的总数据量
+    所以，strip_size[0]*strip_size[1]*3 / ((BW_SYS / 8 - 3*N_ISP) / N_NNG) 就是每个strip在一个NNG的目标延迟
+    虽然很扯，但是也有点道理
+    '''
     Latency_target = int(strip_size[0]*strip_size[1]*3 / ((BW_SYS / 8 - 3*N_ISP) / N_NNG))
     FPS = (FRQ * 1e6 / Latency_target) * (strip_size[1] / resolution[1])
     print(f'FPS: {FPS}, Latency_target: {Latency_target}, isp_latency: {isp_latency}, bubble rate: {(Latency_target-isp_latency)*100/Latency_target}%')
@@ -74,11 +83,11 @@ if __name__ == '__main__':
     txt_path2 = f'outputs/{srgan_experiment_id}.txt'
 
 
-    # ### run ga
-    # dndm_hof = run_dndm_ga()
-    # srgan_hof = run_srgan_ga()
-    # save_to_pkl(pkl_path1, all_cmes=dndm_hof)
-    # save_to_pkl(pkl_path2, all_cmes=srgan_hof)
+    ### run ga
+    dndm_hof = run_dndm_ga()
+    srgan_hof = run_srgan_ga()
+    save_to_pkl(pkl_path1, all_cmes=dndm_hof)
+    save_to_pkl(pkl_path2, all_cmes=srgan_hof)
 
 
     ### read pkl
@@ -104,7 +113,7 @@ if __name__ == '__main__':
     extract_latency_range = (Latency_target-err, Latency_target+err)
     extracted_hof_dndm  = [h for h in dndm_hof_from_pkl  if extract_latency_range[0] < h.fitness.values[1] < extract_latency_range[1]]     # h.fitness.values[1] is latency
     extracted_hof_srgan = [h for h in srgan_hof_from_pkl if extract_latency_range[0] < h.fitness.values[1] < extract_latency_range[1]]    
-    assert (extracted_hof_dndm != []) and (extracted_hof_srgan != [])       # 不能提取出空的indi
+    assert (extracted_hof_dndm != []) and (extracted_hof_srgan != [])       # 不能提取出空的indi,如果为空，说明没有遗传出来满足条件的个体
     print(f'err_rate: {err*100/Latency_target}, len of extracted dndm hof: {len(extracted_hof_dndm)}; len of extracted srgan hof: {len(extracted_hof_srgan)}')
 
 

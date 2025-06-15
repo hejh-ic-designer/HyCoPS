@@ -5,7 +5,8 @@ from hycops.classes.hardware.range_parameter import *
 class Buffer:
     def __init__(self, size: int, bw_power: int):
         """
-        Buffer的大小和带宽都是2的倍数, 所以入参是2的幂指数
+        Buffer的大小单位是KB
+        Buffer带宽都是2的倍数, 所以入参是2的幂指数
 
         Args:
             size (int): unit: KB

@@ -30,16 +30,16 @@ class Stack:
         """
 
         self.id = id
-        self.stack_di = self.cover_new_h_w(origin_stack=stack_di, new_hw=new_hw)
+        self.stack_di = self.cover_new_h_w(origin_stack=stack_di, new_hw=new_hw) #这里把yml文件中的格式都转化为输入的new_hw格式,也就是strip格式
         self.stack_len = len(stack_di)
-        self.stride_per_layer = [layer.get('stride', 1) for layer in self.stack_di.values()]
-        self.ich_per_layer = [layer['dim'][3] for layer in self.stack_di.values()]
-        self.och_per_layer = [layer['dim'][2] for layer in self.stack_di.values()]
-        self.in_resb = [layer.get('in_resb', None) for layer in self.stack_di.values()]
-        self.kernel_size = [layer['dim'][-1] for layer in self.stack_di.values()]
-        self.ofm_h = [layer['dim'][0] for layer in self.stack_di.values()][-1]
-        self.ofm_w = [layer['dim'][1] for layer in self.stack_di.values()][-1]
-        self.parse_ifm_and_ofm()
+        self.stride_per_layer = [layer.get('stride', 1) for layer in self.stack_di.values()] # 默认stride为1
+        self.ich_per_layer = [layer['dim'][3] for layer in self.stack_di.values()]      # 输入通道数, 也就是输入feature map的channel数
+        self.och_per_layer = [layer['dim'][2] for layer in self.stack_di.values()]      # 输出通道数, 也就是输出feature map的channel数
+        self.in_resb = [layer.get('in_resb', None) for layer in self.stack_di.values()] # 是否在残差块中
+        self.kernel_size = [layer['dim'][-1] for layer in self.stack_di.values()]       # 卷积核大小, 也就是卷积核的长宽, fx = fy
+        self.ofm_h = [layer['dim'][0] for layer in self.stack_di.values()][-1]          # 输出feature map的高
+        self.ofm_w = [layer['dim'][1] for layer in self.stack_di.values()][-1]          # 输出feature map的宽
+        self.parse_ifm_and_ofm() # 计算输入和输出feature map的面积（二维没考虑通道）和数据量（考虑通道了）
 
     def cover_new_h_w(self, origin_stack: dict, new_hw: tuple | None) -> dict:
         """
