@@ -9,7 +9,7 @@ def create_random_PEA():
             return (unroll_lst[idx] in range(*UNROLL_HW_POWER_RG))
         if idx in [2, 3]: # oc, ic
             return (unroll_lst[idx] in range(*UNROLL_OCIC_POWER_RG))
-        if idx in [4, 5]: # h, w
+        if idx in [4, 5]: # fx, fy
             if random.random() < 0.5:   # 有这样的概率，在FX和FY的位置加1
                 return (unroll_lst[idx] in range(*UNROLL_FXFY_POWER_RG))
             return False
@@ -40,7 +40,7 @@ class PEA:
 
     def check_valid(self):
         assert len(self.unroll) == 6, f"pe array unroll input error: {self.unroll}" # unroll 必须是6个数
-        assert COMP_POWER_RG[0] <= self.compute_power <= COMP_POWER_RG[1], f"pe array unroll input error: {self.unroll_power}"
+        assert COMP_POWER_RG[0] <= self.compute_power <= COMP_POWER_RG[1], f"pe array unroll input error: {self.unroll_power},MAC number out of range 1k-8k"
 
     def get_unroll(self):
         ''' 返回计算阵列的展开维度 '''
