@@ -192,7 +192,7 @@ class HyCostModelEvaluation:
     
     @staticmethod
     def set_bad_core_flag(cg: CoreGroup, num_factor: list):
-        cg.bad_core = [n==1 for n in num_factor]
+        cg.bad_core = [n==1 for n in num_factor]    # 某个核心的 num_factor 为1，说明其不具备层融合多个tile的能力，本质上在其子图领域做LBL计算，则标记为bad core
 
     
     def organize_data(self):
