@@ -80,7 +80,7 @@ class HyCostModelEvaluation:
             ''' 将nng拆分成若干stack, 然后逐个评估 '''   
             self.stacks_evaluation = [self.evaluation_one_stack(stack, self.cg) for stack in self.stacks]   
             
-            la_perS, en_perS, extra_info = zip(*self.stacks_evaluation)
+            la_perS, en_perS, extra_info = zip(*self.stacks_evaluation) # latency per Stack, energy per Stack, extra_info per Stack
             self.la_perS = la_perS
             self.en_perS = en_perS
             self.extra_info = extra_info
@@ -132,7 +132,7 @@ class HyCostModelEvaluation:
         ppb_transfer_delay = max(ifm, ofm) / ppb_bw
         
         ''' energy '''
-        memory_energy = (ifm + ofm + stack.get_stack_weight_data_amount()) * cg.ppb.get_read_cost()
+        memory_energy = (ifm + ofm + stack.get_stack_weight_data_amount()) * cg.ppb.get_read_cost()     # 这里仅仅考虑了ppb的读写能耗（单次读写能耗相等）, 没有考虑act_buf和wt_buf的读写能耗
         
         ''' stack latency/energy'''
         stack_comp_la = computation_delay + data_loading_delay + data_offloading_delay
@@ -151,7 +151,7 @@ class HyCostModelEvaluation:
         ''' evaluation delay for a core group on a stack '''
         tile_area_delay_energy_for_cores = [HyCostModelEvaluation.evaluation_one_core(stack, c) for c in cg.cores]
         area_of_strip = stack.get_ifm_area()
-        a_div_d_sum = sum([a/d for (a, d, _) in tile_area_delay_energy_for_cores])
+        a_div_d_sum = sum([a/d for (a, d, _) in tile_area_delay_energy_for_cores])      # 所有core消耗tile面积的总速度
         num_factor = [ceil(area_of_strip / a_div_d_sum / d) for (_, d, _) in tile_area_delay_energy_for_cores]
         HyCostModelEvaluation.set_bad_core_flag(cg, num_factor)
         computation_delay_each_core = [f * d for f, (_, d, _) in zip(num_factor, tile_area_delay_energy_for_cores)]
@@ -171,13 +171,13 @@ class HyCostModelEvaluation:
         ''' evaluation fusion only one tile's area/delay for a core on a stack'''
         act_buf_size = core.get_act_buf_size()  # unit: KB
         unroll = core.get_unroll()
-        ich_plus_och_per_layer = [ich + och for ich, och in zip(stack.ich_per_layer, stack.och_per_layer)]
-        unit_tile_data_amount = max(ich_plus_och_per_layer) * unroll['h'] * unroll['w'] / 1024  # unit: KB
+        ich_plus_och_per_layer = [ich + och for ich, och in zip(stack.ich_per_layer, stack.och_per_layer)]  # input_channel + output_channel
+        unit_tile_data_amount = max(ich_plus_och_per_layer) * unroll['h'] * unroll['w'] / 1024  # unit: KB  # input_PEunroll_data_amount + output_PEunroll__data_amount
         unit_tile_factor = act_buf_size / unit_tile_data_amount
         core_fusion_one_tile_area = unit_tile_factor * unroll['h'] * unroll['w']
         core_fusion_one_tile_delay_per_layer = [ceil(unit_tile_factor) * 
-                                                ceil(ich / unroll['ic']) * 
-                                                ceil(och / unroll['oc']) * 
+                                                ceil(ich / unroll['ic']) *  # input_channel
+                                                ceil(och / unroll['oc']) *  # output_channel
                                                 ceil(kernel / unroll['fx']) * 
                                                 ceil(kernel / unroll['fy']) 
                                                 for ich, och, kernel in zip(stack.ich_per_layer, stack.och_per_layer, stack.kernel_size)]

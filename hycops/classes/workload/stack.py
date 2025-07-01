@@ -71,6 +71,7 @@ class Stack:
         self.ifm_data_amount_per_layer = [area * ch for area, ch in zip(self.ifm_area_per_layer, self.ich_per_layer)]
 
     def get_stack_ifm_and_ofm(self):
+        ''' get the first layer's IFM and last layer's OFM data amount'''
         return (self.ifm_data_amount_per_layer[0], self.ofm_data_amount_per_layer[-1])  # (ifm, ofm)
 
     def get_ema_of_all_fused(self):
